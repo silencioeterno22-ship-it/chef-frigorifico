@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chef do Frigorífico</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff4d6d">
+
+  <!-- Fonte (opcional, fica bonito) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#fff0f3;
+      --bg2:#f1f5ff;
+      --ink:#0f172a;
+      --muted:#55627a;
+      --card:#ffffffcc;
+      --stroke:#e6e8ef;
+      --accent:#ff4d6d;
+      --accent2:#5b8cff;
+      --ok:#22c55e;
+      --shadow: 0 16px 50px rgba(15,23,42,.12);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background: radial-gradient(1200px 600px at 15% 10%, var(--bg1), transparent),
+                  radial-gradient(1200px 600px at 85% 0%, var(--bg2), transparent),
+                  #fff;
+    }
+    a{color:inherit}
+    .wrap{max-width:1050px;margin:0 auto;padding:22px 16px 60px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+      font-weight:800;letter-spacing:-.02em
+    }
+    .logo{
+      width:38px;height:38px;border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), #ffb703);
+      box-shadow: 0 10px 30px rgba(255,77,109,.25);
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 12px;border-radius:999px;border:1px solid var(--stroke);
+      background: #fff; color: var(--muted);
+      font-size:13px;
+    }
+
+    .hero{
+      border:1px solid var(--stroke);
+      background: linear-gradient(135deg, #ffffffcc, #ffffff99);
+      box-shadow: var(--shadow);
+      border-radius: calc(var(--radius) + 6px);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:0;
+    }
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+    }
+    .heroText{padding:22px 22px 18px}
+    .h1{
+      font-size: clamp(26px, 3.2vw, 40px);
+      line-height:1.05;margin:0 0 10px;
+      letter-spacing:-.03em;
+    }
+    .sub{margin:0 0 16px;color:var(--muted);max-width:60ch}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 0}
+    .chip{
+      border:1px solid var(--stroke);
+      background:#fff;
+      padding:10px 12px;border-radius:999px;
+      display:flex;align-items:center;gap:10px;
+      font-size:14px;
+      box-shadow: 0 8px 20px rgba(15,23,42,.05);
+    }
+    .chip input{transform:scale(1.15)}
+    .ctaRow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+    .btn{
+      border:0; cursor:pointer;
+      padding:12px 14px;border-radius:14px;
+      font-weight:700;
+      transition: transform .08s ease, box-shadow .08s ease, opacity .2s;
+    }
+    .btn:active{transform: translateY(1px)}
+    .btnPrimary{
+      background: linear-gradient(135deg, var(--accent), #ffb703);
+      color:#0b1020;
+      box-shadow: 0 14px 28px rgba(255,77,109,.28);
+    }
+    .btnGhost{
+      background:#fff;border:1px solid var(--stroke); color:var(--ink);
+    }
+    .btnSmall{padding:10px 12px;border-radius:12px;font-weight:600}
+
+    .heroMedia{
+      min-height: 290px;
+      position:relative;
+      background:
+        linear-gradient(180deg, rgba(15,23,42,.05), rgba(15,23,42,.10)),
+        url("https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=1200&q=60");
+      background-size:cover;
+      background-position:center;
+    }
+    .badge{
+      position:absolute;left:16px;top:16px;
+      background:#ffffffdd;border:1px solid var(--stroke);
+      padding:10px 12px;border-radius:999px;
+      font-weight:700;
+      box-shadow: 0 12px 28px rgba(15,23,42,.12);
+    }
+    .badge span{color:var(--accent)}
+    .panel{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    .card{
+      border:1px solid var(--stroke);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 32px rgba(15,23,42,.08);
+      padding:16px;
+      backdrop-filter: blur(10px);
+    }
+    textarea{
+      width:100%;
+      min-height: 120px;
+      resize: vertical;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid var(--stroke);
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+    textarea:focus{border-color:#ffb3c1; box-shadow: 0 0 0 4px rgba(255,77,109,.12)}
+    .row{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:10px
+    }
+    .muted{color:var(--muted);font-size:13px}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+
+    .recipe{
+      border:1px solid var(--stroke);
+      background:#fff;
+      border-radius: 16px;
+      overflow:hidden;
+      box-shadow: 0 12px 28px rgba(15,23,42,.10);
+      display:flex;
+      flex-direction:column;
+    }
+    .recipeImg{
+      height: 140px;
+      background-size:cover;
+      background-position:center;
+      position:relative;
+    }
+    .tag{
+      position:absolute;left:12px;bottom:12px;
+      background:#ffffffdd;border:1px solid var(--stroke);
+      padding:8px 10px;border-radius:999px;font-weight:700;font-size:12px
+    }
+    .recipeBody{padding:12px}
+    .recipeTitle{margin:0 0 6px;font-size:16px;letter-spacing:-.02em}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+    ul{margin:10px 0 0 18px}
+    li{margin:6px 0}
+    .split{
+      display:grid;grid-template-columns: 1fr 1fr;gap:12px;margin-top:12px
+    }
+    @media (max-width: 900px){ .split{grid-template-columns:1fr} }
+    .copyOk{color:var(--ok);font-weight:700}
+    code{background:#0f172a0d;padding:2px 6px;border-radius:8px}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>Chef do Frigorífico</div>
+      </div>
+      <div class="pill" id="installHint">📲 Dica: depois podes instalar como app</div>
+    </div>
+
+    <div class="hero">
+      <div class="heroText">
+        <h1 class="h1">Diz-me o que tens em casa 🍳<br>Eu sugiro receitas.</h1>
+        <p class="sub">Escreve os ingredientes. Escolhe preferências. Recebe 3 ideias + lista mínima de compras. (Hoje em modo “demo”; depois ligamos os agents.)</p>
+
+        <div class="card" style="margin-top:14px;">
+          <label style="font-weight:700;">Ingredientes</label>
+          <textarea id="ingredients" placeholder="Ex.: ovos, atum, massa, tomate, arroz, frango, espinafres, iogurte..."></textarea>
+
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="quick"> até 20 min</label>
+            <label class="chip"><input type="checkbox" id="onepot"> 1 panela</label>
+            <label class="chip"><input type="checkbox" id="vegetarian"> vegetariano</label>
+            <label class="chip"><input type="checkbox" id="lactosefree"> sem lactose</label>
+          </div>
+
+          <div class="ctaRow">
+            <button class="btn btnPrimary" id="go">Gerar receitas</button>
+            <button class="btn btnGhost" id="clear">Limpar</button>
+            <span class="muted" id="status"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="heroMedia">
+        <div class="badge">✨ <span>3</span> receitas + lista de compras</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="card" id="results" style="display:none;">
+        <div class="row">
+          <div>
+            <div style="font-weight:800;font-size:18px;">As tuas sugestões</div>
+            <div class="muted">Podes copiar a lista de compras e guardar “favoritas”.</div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <button class="btn btnSmall btnGhost" id="copyList">Copiar lista</button>
+            <span id="copyMsg" class="muted"></span>
+          </div>
+        </div>
+
+        <div class="split">
+          <div>
+            <div style="font-weight:800;margin-top:6px;">Lista de compras (mínima)</div>
+            <ul id="shopping"></ul>
+          </div>
+          <div>
+            <div style="font-weight:800;margin-top:6px;">Dicas</div>
+            <ul id="tips"></ul>
+          </div>
+        </div>
+
+        <div class="grid" id="recipesGrid"></div>
+      </div>
+
+      <div class="muted" style="text-align:center;">
+        Publicado em <code>HTTPS</code> → a tua família instala no telemóvel (Adicionar ao ecrã inicial / Instalar).
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- Demo data (mais tarde trocamos por chamada aos agents no backend) ---
+    const DEMO_IMAGES = [
+      "https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&fit=crop&w=1200&q=60",
+      "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=1200&q=60",
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=1200&q=60"
+    ];
+
+    function normalizeList(text){
+      return text.split(",")
+        .map(s => s.trim())
+        .filter(Boolean)
+        .slice(0, 40);
+    }
+
+    function buildDemo(ingredients, prefs){
+      const base = ingredients.length ? ingredients : ["ovos", "tomate", "massa"];
+      const quick = prefs.quick ? 15 : 25;
+      const onepot = prefs.onepot ? " (1 panela)" : "";
+      const vegOk = prefs.vegetarian ? " (vegetariano)" : "";
+      const lact = prefs.lactosefree ? " (sem lactose)" : "";
+
+      const recipes = [
+        {
+          title: `Massa rápida com ${base[0] || "legumes"}${onepot}`,
+          time: quick,
+          tag: `Rápida${prefs.quick ? "" : ""}`,
+          missing: ["alho", "azeite"],
+          steps: [
+            "Coze a massa (ou usa massa já cozida se tiveres).",
+            `Salteia ${base.slice(0,3).join(", ")} com azeite e alho.`,
+            "Mistura com a massa, ajusta sal/pimenta e serve."
+          ],
+          notes: [prefs.vegetarian ? "Sem carne/peixe." : "Podes adicionar proteína."],
+          img: DEMO_IMAGES[0]
+        },
+        {
+          title: `Omelete “limpa-frigorífico”${vegOk}${lact}`,
+          time: 12,
+          tag: "Fácil",
+          missing: ["cebola (opcional)"],
+          steps: [
+            "Bate 2–3 ovos (ou alternativa vegetal se preferires).",
+            `Junta ${base.slice(1,4).join(", ")} picados e tempera.`,
+            "Cozinha numa frigideira antiaderente e dobra."
+          ],
+          notes: [prefs.lactosefree ? "Evita queijo; usa ervas." : "Queijo fica ótimo."],
+          img: DEMO_IMAGES[1]
+        },
+        {
+          title: `Taça de arroz com ${base[2] || "atum"} e molho rápido`,
+          time: 18,
+          tag: "Equilibrado",
+          missing: ["limão", "iogurte ou alternativa"],
+          steps: [
+            "Prepara arroz (ou usa já cozido).",
+            `Adiciona ${base.slice(0,3).join(", ")} por cima.`,
+            "Mistura um molho simples (iogurte+limão+sal) e finaliza."
+          ],
+          notes: ["Trocas fáceis: arroz → quinoa / molho → azeite+limão."],
+          img: DEMO_IMAGES[2]
+        }
+      ];
+
+      // filtros básicos demo
+      const filtered = recipes.filter(r => {
+        if (prefs.vegetarian && r.title.toLowerCase().includes("atum")) return false;
+        if (prefs.onepot && !r.title.toLowerCase().includes("1 panela")) return true; // demo simples
+        return true;
+      });
+
+      const shopping = Array.from(new Set(filtered.flatMap(r => r.missing))).slice(0, 12);
+      const tips = [
+        "Escreve ingredientes separados por vírgulas para melhores sugestões.",
+        "Clica em “Copiar lista” e manda no grupo da família.",
+        "Depois podemos ligar agents para receitas realmente personalizadas."
+      ];
+
+      return { recipes: filtered, shopping, tips };
+    }
+
+    // --- UI ---
+    const $ = (id) => document.getElementById(id);
+
+    function render(data){
+      $("results").style.display = "block";
+
+      // shopping
+      $("shopping").innerHTML = "";
+      data.shopping.forEach(x => {
+        const li = document.createElement("li");
+        li.textContent = x;
+        $("shopping").appendChild(li);
+      });
+
+      // tips
+      $("tips").innerHTML = "";
+      data.tips.forEach(x => {
+        const li = document.createElement("li");
+        li.textContent = x;
+        $("tips").appendChild(li);
+      });
+
+      // recipes
+      const grid = $("recipesGrid");
+      grid.innerHTML = "";
+
+      data.recipes.forEach((r, i) => {
+        const card = document.createElement("div");
+        card.className = "recipe";
+
+        const img = document.createElement("div");
+        img.className = "recipeImg";
+        img.style.backgroundImage = `url("${r.img}")`;
+
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        tag.textContent = `${r.tag} • ${r.time} min`;
+        img.appendChild(tag);
+
+        const body = document.createElement("div");
+        body.className = "recipeBody";
+
+        const title = document.createElement("h4");
+        title.className = "recipeTitle";
+        title.textContent = r.title;
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        meta.textContent = `Faltam: ${r.missing.join(", ")}`;
+
+        const stepsTitle = document.createElement("div");
+        stepsTitle.style.fontWeight = "800";
+        stepsTitle.style.marginTop = "10px";
+        stepsTitle.textContent = "Passos";
+
+        const ul = document.createElement("ul");
+        r.steps.forEach(s => {
+          const li = document.createElement("li");
+          li.textContent = s;
+          ul.appendChild(li);
+        });
+
+        const notes = document.createElement("div");
+        notes.className = "muted";
+        notes.style.marginTop = "10px";
+        notes.textContent = r.notes.join(" ");
+
+        body.appendChild(title);
+        body.appendChild(meta);
+        body.appendChild(stepsTitle);
+        body.appendChild(ul);
+        body.appendChild(notes);
+
+        card.appendChild(img);
+        card.appendChild(body);
+        grid.appendChild(card);
+      });
+    }
+
+    $("go").addEventListener("click", () => {
+      const list = normalizeList($("ingredients").value);
+      const prefs = {
+        quick: $("quick").checked,
+        onepot: $("onepot").checked,
+        vegetarian: $("vegetarian").checked,
+        lactosefree: $("lactosefree").checked
+      };
+
+      $("status").textContent = "A pensar nas receitas…";
+      setTimeout(() => {
+        const data = buildDemo(list, prefs);
+        render(data);
+        $("status").textContent = "";
+      }, 300);
+    });
+
+    $("clear").addEventListener("click", () => {
+      $("ingredients").value = "";
+      $("results").style.display = "none";
+      $("copyMsg").textContent = "";
+    });
+
+    $("copyList").addEventListener("click", async () => {
+      const items = Array.from($("shopping").querySelectorAll("li")).map(li => `- ${li.textContent}`);
+      if (!items.length) return;
+
+      const text = `Lista de compras (Chef do Frigorífico)\n${items.join("\n")}`;
+      try{
+        await navigator.clipboard.writeText(text);
+        $("copyMsg").innerHTML = `<span class="copyOk">Copiado ✅</span>`;
+        setTimeout(() => $("copyMsg").textContent = "", 2000);
+      }catch{
+        $("copyMsg").textContent = "Não consegui copiar — tenta manualmente.";
+      }
+    });
+
+    // PWA: registar service worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js");
+      });
+    }
+  </script>
+</body>
+</html>
